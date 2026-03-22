@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "lib/Change/version"
+require_relative "lib/weather_api_client/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "Change"
-  spec.version = Change::VERSION
-  spec.authors = ["Egor", "Sergey", "Arseny","Ed"]
-  spec.email = ["lushchevich@sfedu.ru"]
+  spec.name = "weather_api_client"
+  spec.version = WeatherApiClient::VERSION
+  spec.authors = ["TODO: Write your name"]
+  spec.email = ["TODO: Write your email address"]
 
   spec.summary = "TODO: Write a short summary, because RubyGems requires one."
   spec.description = "TODO: Write a longer description or delete this line."
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).reject do |f|
       (f == gemspec) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git appveyor Gemfile])
+        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
     end
   end
   spec.bindir = "exe"
