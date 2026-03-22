@@ -16,6 +16,9 @@ Gem::Specification.new do |spec|
 
   #Зависимости
   spec.add_dependency "httparty" #Для get запроса
+  spec.add_dependency "test_helper"
+  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "minitest-reporters"
 
   spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 

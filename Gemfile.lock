@@ -3,11 +3,14 @@ PATH
   specs:
     weather_api_client (0.1.0)
       httparty
+      test_helper
 
 GEM
   remote: https://rubygems.org/
   specs:
+    ansi (1.5.0)
     bigdecimal (4.0.1)
+    builder (3.3.0)
     csv (3.3.5)
     diff-lcs (1.6.2)
     httparty (0.24.2)
@@ -15,6 +18,12 @@ GEM
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     mini_mime (1.1.5)
+    minitest (5.27.0)
+    minitest-reporters (1.7.1)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
     rake (13.3.1)
@@ -31,11 +40,15 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
+    ruby-progressbar (1.13.0)
+    test_helper (0.0.1)
 
 PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
+  minitest (~> 5.0)
+  minitest-reporters
   rake (~> 13.0)
   rspec (~> 3.0)
   weather_api_client!
