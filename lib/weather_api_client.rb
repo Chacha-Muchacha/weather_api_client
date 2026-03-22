@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "weather_api_client/version"
-require_relative "weather_api_client/client"
+require_relative "weather_api_client/client/rb"
 require_relative "weather_api_client/parser"
 require_relative "weather_api_client/cli"
 
