@@ -1,10 +1,11 @@
 require_relative 'client'
 require_relative 'parser'
+require 'colorize'
 
 module WeatherApiClient
   class CLI
     def self.start
-      puts "Welcome to Weather API Client!"
+      puts "🌦️  Welcome to Weather API Client! 🌍".light_blue
       puts "Type 'exit' to quit.\n\n"
 
       loop do
@@ -13,13 +14,13 @@ module WeatherApiClient
         break if input.downcase == 'exit'
 
         if input.empty?
-          puts "Please enter a city name.\n\n"
+          puts "⚠️  Please enter a city name.\n\n".yellow
           next
         end
 
         puts "\nWhat do you want to see?"
         puts "  1. Current weather"
-        puts "  2. 5-day forecast (every 6 hours)"
+        puts "  2. 5-day forecast"
         print "Your choice (1 or 2): "
         choice = gets.chomp.strip
 
@@ -29,11 +30,11 @@ module WeatherApiClient
         when "2"
           show_forecast(input)
         else
-          puts "Invalid choice, please enter 1 or 2.\n\n"
+          puts "❌  Invalid choice, please enter 1 or 2.\n\n".red
         end
       end
 
-      puts "Goodbye!"
+      puts "👋  Goodbye!"
     end
 
     private
@@ -47,13 +48,15 @@ module WeatherApiClient
         condition = data[:condition]
         humidity = data[:humidity]
 
-        puts "\nWeather in #{city.capitalize}:"
-        puts "  Temperature: #{temp}°C"
-        puts "  Condition:   #{condition.capitalize}"
-        puts "  Humidity:    #{humidity}%"
+        colored_temp = colorize_temp(temp)
+
+        puts "\n📍 Weather in #{city.capitalize}:"
+        puts "  🌡️  Temperature: #{colored_temp}"
+        puts "  ☁️  Condition:   #{condition.capitalize}"
+        puts "  💧  Humidity:    #{humidity}%"
         puts ""
       rescue StandardError => e
-        puts "Error: #{e.message}\n\n"
+        puts "❌  Error: #{e.message}\n\n".red
       end
     end
 
@@ -83,21 +86,32 @@ module WeatherApiClient
           }
         end
 
-        puts "\n5-day forecast (every 6 hours):\n\n"
+        puts "\n📅 5-day forecast (every 6 hours):\n\n"
         forecast_by_day.sort.first(5).each do |date, hours_data|
-          puts "#{date}:"
+          puts "📆 #{date}:"
           [0, 6, 12, 18].each do |hour|
             data = hours_data[hour]
             if data
-              puts "   #{data[:time]}  #{data[:temp]}°C  #{data[:condition].capitalize}  #{data[:humidity]}%"
+              colored_temp = colorize_temp(data[:temp])
+              puts "   #{data[:time]}  🌡️ #{colored_temp}  ☁️ #{data[:condition].capitalize}  💧 #{data[:humidity]}%"
             else
-              puts "   #{hour}:00  Data not available"
+              puts "   #{hour}:00  ⚠️  Data not available"
             end
           end
           puts ""
         end
       rescue StandardError => e
-        puts "Error fetching forecast: #{e.message}\n\n"
+        puts "❌  Error fetching forecast: #{e.message}\n\n".red
+      end
+    end
+
+    def self.colorize_temp(temp)
+      if temp > 20
+        "#{temp}°C".red
+      elsif temp < 0
+        "#{temp}°C".blue
+      else
+        "#{temp}°C".green
       end
     end
   end
