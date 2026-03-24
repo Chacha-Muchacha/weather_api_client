@@ -14,6 +14,12 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
 
+  #Зависимости
+  spec.add_dependency "httparty" #Для get запроса
+  spec.add_dependency "test_helper"
+  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "minitest-reporters"
+
   spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
