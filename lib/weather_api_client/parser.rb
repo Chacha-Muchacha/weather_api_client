@@ -7,7 +7,7 @@ module WeatherApiClient
     def parse(json_string)
       JSON.parse(json_string, symbolize_names: true)
     rescue JSON::ParserError => e
-      raise "Failed to parse JSON response: #{e.messadge}"
+      raise "Failed to parse JSON response: #{e.message}"
     end
 
     def extract_temp_coord_city(data)
