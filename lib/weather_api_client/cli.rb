@@ -3,7 +3,10 @@ require_relative 'parser'
 require 'colorize'
 
 module WeatherApiClient
+  # Класс для управления консольным интерфейсом приложения.
   class CLI
+    # Запускает основной цикл программы.
+    # @return [void]
     def self.start
       puts "🌦️  Welcome to Weather API Client! 🌍".light_blue
       puts "Type 'exit' to quit.\n\n"
@@ -39,6 +42,8 @@ module WeatherApiClient
 
     private
 
+    # Получает и выводит текущую погоду для города.
+    # @param city [String] название города.
     def self.show_current_weather(city)
       begin
         raw_json = WeatherApiClient::Client.fetch_weather(city)
@@ -60,6 +65,8 @@ module WeatherApiClient
       end
     end
 
+    # Получает и выводит прогноз погоды на 5 дней.
+    # @param city [String] название города.
     def self.show_forecast(city)
       begin
         forecast_raw = WeatherApiClient::Client.fetch_forecast(city)
@@ -72,6 +79,7 @@ module WeatherApiClient
 
         target_hours = [0, 6, 12, 18]
         forecast_by_day = {}
+        
         temps.each do |datetime_str, temp|
           date_part, time_part = datetime_str.split(' ')
           hour = time_part.split(':')[0].to_i
@@ -105,6 +113,9 @@ module WeatherApiClient
       end
     end
 
+    # Раскрашивает значение температуры в зависимости от её величины.
+    # @param temp [Float, Integer] значение температуры.
+    # @return [String] раскрашенная строка для вывода.
     def self.colorize_temp(temp)
       if temp > 20
         "#{temp}°C".red
