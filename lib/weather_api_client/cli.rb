@@ -176,4 +176,3 @@ module WeatherApiClient
     end
   end
 end
-WeatherApiClient::CLI.start
