@@ -12,28 +12,17 @@ module WeatherApiClient
       puts "Type 'exit' to quit.\n\n"
 
       loop do
-        print "Enter city name (or 'exit' to quit): "
+        print "Search by (1) city name or (2) coordinates (or 'exit' to quit): "
         input = gets.chomp.strip
         break if input.downcase == 'exit'
 
-        if input.empty?
-          puts "⚠️  Please enter a city name.\n\n".yellow
-          next
-        end
-
-        puts "\nWhat do you want to see?"
-        puts "  1. Current weather"
-        puts "  2. 5-day forecast"
-        print "Your choice (1 or 2): "
-        choice = gets.chomp.strip
-
-        case choice
+        case input
         when "1"
-          show_current_weather(input)
+          process_city
         when "2"
-          show_forecast(input)
+          process_coords
         else
-          puts "❌  Invalid choice, please enter 1 or 2.\n\n".red
+          puts "❌  Invalid choice. Please enter 1, 2 or 'exit'.\n\n".red
         end
       end
 
@@ -41,6 +30,45 @@ module WeatherApiClient
     end
 
     private
+
+    def self.process_city
+      print "Enter city name: "
+      city = gets.chomp.strip
+      return if city.empty?
+
+      puts "\nWhat do you want to see?"
+      puts "  1. Current weather"
+      puts "  2. 5-day forecast"
+      print "Your choice (1 or 2): "
+      choice = gets.chomp.strip
+
+      case choice
+      when "1"
+        show_current_weather(city)
+      when "2"
+        show_forecast(city)
+      else
+        puts "❌  Invalid choice.\n\n".red
+      end
+    end
+
+    def self.process_coords
+      print "Enter latitude: "
+      lat_str = gets.chomp.strip
+      print "Enter longitude: "
+      lon_str = gets.chomp.strip
+
+      begin
+        lat = Float(lat_str)
+        lon = Float(lon_str)
+      rescue ArgumentError
+        puts "❌  Invalid coordinates. Please enter numbers.\n\n".red
+        return
+      end
+
+      # Прогноз по координатам не поддерживается → сразу текущая погода
+      show_weather_by_coords(lat, lon)
+    end
 
     # Получает и выводит текущую погоду для города.
     # @param city [String] название города.
@@ -113,6 +141,27 @@ module WeatherApiClient
       end
     end
 
+    def self.show_weather_by_coords(lat, lon)
+      begin
+        raw_json = WeatherApiClient::Client.fetch_by_coords(lat, lon)
+        data = WeatherApiClient::Parser.new.parse_all_coord_city(raw_json)
+
+        temp = data[:temperature]
+        condition = data[:condition]
+        humidity = data[:humidity]
+
+        colored_temp = colorize_temp(temp)
+
+        puts "\n📍 Weather at coordinates (#{lat}, #{lon}):"
+        puts "  🌡️  Temperature: #{colored_temp}"
+        puts "  ☁️  Condition:   #{condition.capitalize}"
+        puts "  💧  Humidity:    #{humidity}%"
+        puts ""
+      rescue StandardError => e
+        puts "❌  Error: #{e.message}\n\n".red
+      end
+    end
+
     # Раскрашивает значение температуры в зависимости от её величины.
     # @param temp [Float, Integer] значение температуры.
     # @return [String] раскрашенная строка для вывода.
@@ -127,3 +176,4 @@ module WeatherApiClient
     end
   end
 end
+WeatherApiClient::CLI.start
